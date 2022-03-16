@@ -1,0 +1,28 @@
+name: Codesign apple binaries with Apple Developer certificate
+description: |
+  Uses Apple provided developer certificate to codesign binaries for execution in the OS.
+author: hjpotter92
+
+inputs:
+  developer-certificate-id:
+    description: Apple provided certificate ID
+    required: true
+  developer-certificate-base64:
+    description: Base64 encoded developer certificate
+    required: true
+  developer-certificate-password:
+    description: Password needed to import the certificate
+    required: true
+  keychain-password:
+    description: Optional password for setting up keychain
+    required: false
+    default: ''
+
+runs:
+  using: composite
+  steps:
+    - name: Generate keychain
+      shell: bash
+      run: ${{ github.action_path }}/scripts/keychain.bash
+      env:
+        KEYCHAIN_PASSWORD: ${{ inputs.keychain-password }}
