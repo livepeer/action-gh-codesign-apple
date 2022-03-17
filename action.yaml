@@ -43,5 +43,5 @@ runs:
         KEYCHAIN_FILE: ${{ steps.keychain.outputs.keychain-file }}
         CERTIFICATE_FILE: ${{ steps.keychain.outputs.certificate-file }}
         BINARY_PATH: ${{ inputs.binary-path }}
-        DEVELOPER_CERIFICATE_ID: ${{ inputs.developer-certificate-id }}
+        DEVELOPER_CERTIFICATE_ID: ${{ inputs.developer-certificate-id }}
         DEVELOPER_CERTIFICATE_PASSWORD: ${{ inputs.developer-certificate-password }}
