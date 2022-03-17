@@ -25,6 +25,7 @@ runs:
   using: composite
   steps:
     - name: Generate keychain
+      if: ${{ runner.os == 'macOS' }}
       id: keychain
       shell: bash
       run: ${{ github.action_path }}/scripts/keychain.bash
@@ -33,6 +34,7 @@ runs:
         DEVELOPER_CERTIFICATE_BASE64: ${{ inputs.developer-certificate-base64 }}
 
     - name: Sign binaries
+      if: ${{ runner.os == 'macOS' }}
       id: codesign
       shell: bash
       run: ${{ github.action_path }}/scripts/codesign.bash

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -ex
 
 CODESIGN="$(command -v codesign || echo -n "/usr/bin/codesign")"
 
