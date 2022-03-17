@@ -13,6 +13,9 @@ inputs:
   developer-certificate-password:
     description: Password needed to import the certificate
     required: true
+  binary-path:
+    required: true
+    description: Path where binaries which need to be codesigned are stored/available
   keychain-password:
     description: Optional password for setting up keychain
     required: false
@@ -22,7 +25,21 @@ runs:
   using: composite
   steps:
     - name: Generate keychain
+      id: keychain
       shell: bash
       run: ${{ github.action_path }}/scripts/keychain.bash
       env:
         KEYCHAIN_PASSWORD: ${{ inputs.keychain-password }}
+        DEVELOPER_CERTIFICATE_BASE64: ${{ inputs.developer-certificate-base64 }}
+
+    - name: Sign binaries
+      id: codesign
+      shell: bash
+      run: ${{ github.action_path }}/scripts/codesign.bash
+      env:
+        PASSWORD: ${{ steps.keychain.outputs.password }}
+        KEYCHAIN_FILE: ${{ steps.keychain.outputs.keychain-file }}
+        CERTIFICATE_FILE: ${{ steps.keychain.outputs.certificate-file }}
+        BINARY_PATH: ${{ inputs.binary-path }}
+        DEVELOPER_CERIFICATE_ID: ${{ inputs.developer-certificate-id }}
+        DEVELOPER_CERTIFICATE_PASSWORD: ${{ inputs.developer-certificate-password }}
