@@ -24,6 +24,13 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Fail if run on non-macOS runner
+      if: ${{ runner.os != 'macOS' }}
+      shell: bash
+      run: |
+        echo "Failed to run action on ${{ runner.os }}. Requires macos runner"
+        exit 1
+
     - name: Generate keychain
       if: ${{ runner.os == 'macOS' }}
       id: keychain
