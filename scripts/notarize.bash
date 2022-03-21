@@ -3,7 +3,7 @@
 set -e
 
 function main() {
-  altool --notarize-app \
+  xcrun altool --notarize-app \
     --verbose --output-format json \
     --primary-bundle-id "${APP_BUNDLE_ID}" \
     --file "${NOTARIZATION_FILE}" \
