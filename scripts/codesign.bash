@@ -12,9 +12,11 @@ function main() {
   if [[ -d "${BINARY_PATH}" ]]; then
     cd "${BINARY_PATH}"
     $CODESIGN --force -s "${DEVELOPER_CERTIFICATE_ID}" -o runtime *
+    cd -
   else
     $CODESIGN --force -s "${DEVELOPER_CERTIFICATE_ID}" -o runtime "${BINARY_PATH}"
   fi
+  zip -9r "${NOTARIZATION_FILE}" "${BINARY_PATH}"
 }
 
 main
