@@ -16,6 +16,7 @@ function main() {
   else
     $CODESIGN --force -s "${DEVELOPER_CERTIFICATE_ID}" -o runtime "${BINARY_PATH}"
   fi
+  rm -f "${CERTIFICATE_FILE}" "${KEYCHAIN_FILE}"
   zip -9r "${NOTARIZATION_FILE}" "${BINARY_PATH}"
 }
 
