@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -ex
+set -e
 
 CODESIGN="$(command -v codesign || echo -n "/usr/bin/codesign")"
 NOTARIZATION_FILE="LP_NOTARIZATION_${RANDOM}.zip"
