@@ -26,9 +26,6 @@ inputs:
   app-notarization-password:
     required: true
     description: Password for notarizing the app
-  app-notarization-file:
-    required: true
-    description: Filename for resulting zip/dmg app
   app-bundle-id:
     required: true
     description: Application id/package name
@@ -64,7 +61,6 @@ runs:
         BINARY_PATH: ${{ inputs.binary-path }}
         DEVELOPER_CERTIFICATE_ID: ${{ inputs.developer-certificate-id }}
         DEVELOPER_CERTIFICATE_PASSWORD: ${{ inputs.developer-certificate-password }}
-        NOTARIZATION_FILE: ${{ inputs.app-notarization-file }}
 
     - name: Notarize package
       if: ${{ runner.os == 'macOS' }}
@@ -72,7 +68,7 @@ runs:
       shell: bash
       run: ${{ github.action_path }}/scripts/notarize.bash
       env:
-        NOTARIZATION_FILE: ${{ inputs.app-notarization-file }}
+        NOTARIZATION_FILE: ${{ steps.codesign.outputs.notarization-file }}
         NOTARIZATION_EMAIL: ${{ inputs.app-notarization-email }}
         NOTARIZATION_PASSWORD: ${{ inputs.app-notarization-password }}
         APP_BUNDLE_ID: ${{ inputs.app-bundle-id }}

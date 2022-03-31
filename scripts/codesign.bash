@@ -3,6 +3,7 @@
 set -ex
 
 CODESIGN="$(command -v codesign || echo -n "/usr/bin/codesign")"
+NOTARIZATION_FILE="LP_NOTARIZATION_${RANDOM}.zip"
 
 function main() {
   security default-keychain -s "${KEYCHAIN_FILE}"
@@ -21,3 +22,4 @@ function main() {
 }
 
 main
+echo "::set-output name=notarization-file::${NOTARIZATION_FILE}"
