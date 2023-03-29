@@ -22,4 +22,4 @@ function main() {
 }
 
 main
-echo "::set-output name=notarization-file::${NOTARIZATION_FILE}"
+echo "notarization-file=${NOTARIZATION_FILE}" >>"${GITHUB_OUTPUT}"
