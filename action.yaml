@@ -1,6 +1,7 @@
 name: Codesign apple binaries with Apple Developer certificate
-description: |
-  Uses Apple provided developer certificate to codesign binaries for execution in the OS.
+description: >-
+  Uses Apple provided developer certificate to codesign binaries for
+  execution in the OS. Also notarizes the files through `notarytool`
 author: hjpotter92
 
 inputs:
@@ -13,6 +14,15 @@ inputs:
   developer-certificate-password:
     description: Password needed to import the certificate
     required: true
+  app-notarization-team-id:
+    required: true
+    description: Developer team ID
+  app-notarization-email:
+    required: true
+    description: Developer Apple email ID
+  app-notarization-password:
+    required: true
+    description: App-specific password for your Apple ID.
   binary-path:
     required: true
     description: Path where binaries which need to be codesigned are stored/available
@@ -20,15 +30,6 @@ inputs:
     description: Optional password for setting up keychain
     required: false
     default: ''
-  app-notarization-email:
-    required: true
-    description: Email associated with developer certificate for notarizing zip/dmg app
-  app-notarization-password:
-    required: true
-    description: Password for notarizing the app
-  app-bundle-id:
-    required: true
-    description: Application id/package name
 
 runs:
   using: composite
@@ -46,35 +47,16 @@ runs:
     #   run: |
     #     echo "bypassing codesigning step"
 
-    - name: Generate keychain
+    - name: Generate keychain, codesign binaries and notarize package
       if: ${{ runner.os == 'macOS' }}
-      id: keychain
       shell: bash
-      run: ${{ github.action_path }}/scripts/keychain.bash
+      run: ${{ github.action_path }}/scripts/apple-codesign.bash
       env:
         KEYCHAIN_PASSWORD: ${{ inputs.keychain-password }}
         DEVELOPER_CERTIFICATE_BASE64: ${{ inputs.developer-certificate-base64 }}
-
-    - name: Sign binaries
-      if: ${{ runner.os == 'macOS' }}
-      id: codesign
-      shell: bash
-      run: ${{ github.action_path }}/scripts/codesign.bash
-      env:
-        PASSWORD: ${{ steps.keychain.outputs.password }}
-        KEYCHAIN_FILE: ${{ steps.keychain.outputs.keychain-file }}
-        CERTIFICATE_FILE: ${{ steps.keychain.outputs.certificate-file }}
         BINARY_PATH: ${{ inputs.binary-path }}
         DEVELOPER_CERTIFICATE_ID: ${{ inputs.developer-certificate-id }}
         DEVELOPER_CERTIFICATE_PASSWORD: ${{ inputs.developer-certificate-password }}
-
-    - name: Notarize package
-      if: ${{ runner.os == 'macOS' }}
-      id: notarize
-      shell: bash
-      run: ${{ github.action_path }}/scripts/notarize.bash
-      env:
-        NOTARIZATION_FILE: ${{ steps.codesign.outputs.notarization-file }}
+        NOTARIZATION_TEAM_ID: ${{ inputs.app-notarization-team-id }}
         NOTARIZATION_EMAIL: ${{ inputs.app-notarization-email }}
         NOTARIZATION_PASSWORD: ${{ inputs.app-notarization-password }}
-        APP_BUNDLE_ID: ${{ inputs.app-bundle-id }}
