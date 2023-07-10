@@ -19,7 +19,7 @@ function livepeer-keychain() {
   security default-keychain -s "$KEYCHAIN_NAME"
   security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_NAME"
   if [[ "$KEYCHAIN_FILE" == "" ]]; then
-    KEYCHAIN_FILE="$(security default-keychain)"
+    KEYCHAIN_FILE="$(security default-keychain | sed -e 's:^["\t ]*::;s:["\t ]*$::')"
   fi
 }
 
@@ -40,12 +40,11 @@ function livepeer-codesign() {
 }
 
 function livepeer-notarize() {
-  set -x
   local keychain_profile="lp-notarize_${RANDOM}"
   security default-keychain -s "$KEYCHAIN_NAME"
   security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_NAME"
   if [[ "$KEYCHAIN_FILE" == "" ]]; then
-    KEYCHAIN_FILE="$(security default-keychain)"
+    KEYCHAIN_FILE="$(security default-keychain | sed -e 's:^["\t ]*::;s:["\t ]*$::')"
   fi
   xcrun notarytool store-credentials \
     --verbose \
