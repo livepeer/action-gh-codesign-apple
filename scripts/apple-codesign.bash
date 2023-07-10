@@ -40,6 +40,7 @@ function livepeer-codesign() {
 }
 
 function livepeer-notarize() {
+  set -x
   local keychain_profile="lp-notarize_${RANDOM}"
   security default-keychain -s "$KEYCHAIN_NAME"
   security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_NAME"
@@ -58,9 +59,9 @@ function livepeer-notarize() {
   xcrun notarytool submit \
     --keychain-profile "$keychain_profile" \
     --keychain "$KEYCHAIN_FILE" \
+    --verbose \
     --wait \
     --timeout 3m \
-    --verbose \
     "${NOTARIZATION_FILE}"
   rm -f "${NOTARIZATION_FILE}"
 }
