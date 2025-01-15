@@ -60,7 +60,7 @@ function livepeer-notarize() {
     --keychain "$KEYCHAIN_FILE" \
     --verbose \
     --wait \
-    --timeout 3m \
+    --timeout 5m \
     "${NOTARIZATION_FILE}"
   rm -f "${NOTARIZATION_FILE}"
 }
